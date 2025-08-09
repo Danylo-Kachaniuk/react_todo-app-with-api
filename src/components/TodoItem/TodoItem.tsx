@@ -40,7 +40,7 @@ export const TodoItem: React.FC<Props> = ({
   const handleSubmitTitle = async () => {
     const clearTitle = editingTitle.trim();
 
-    if (title === editingTitle) {
+    if (todo.title === clearTitle) {
       setIsEditing(false);
 
       return;

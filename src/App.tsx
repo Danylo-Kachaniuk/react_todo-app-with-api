@@ -2,7 +2,7 @@
 /* eslint-disable jsx-a11y/control-has-associated-label */
 import React, { useEffect, useRef, useState } from 'react';
 import { UserWarning } from './UserWarning';
-import * as todoServise from './api/todos';
+import * as todoService from './api/todos';
 import { TodoHeader } from './components/TodoHeader';
 import { TodoList } from './components/TodoList';
 import { TodoFooter } from './components/TodoFooter/';
@@ -33,7 +33,7 @@ export const App: React.FC = () => {
   const handleUpdateTodo = (newTodo: Todo) => {
     setProcessingTodos(currentIds => [...currentIds, newTodo.id]);
 
-    return todoServise
+    return todoService
       .updateTodos(newTodo)
       .then(todo => {
         setTodos(currentTodos => {
@@ -92,7 +92,7 @@ export const App: React.FC = () => {
 
     const { title, completed, userId } = createdTodo;
 
-    return todoServise
+    return todoService
       .createTodos({ title, completed, userId })
       .then(newTodo => {
         setTodos(currentTodo => [...currentTodo, newTodo]);
@@ -113,7 +113,7 @@ export const App: React.FC = () => {
   const handleDeleteTodo = (todoId: number) => {
     setProcessingTodos(currentIds => [...currentIds, todoId]);
 
-    return todoServise
+    return todoService
       .deleteTodos(todoId)
       .then(() =>
         setTodos(currentTodos =>
@@ -128,10 +128,6 @@ export const App: React.FC = () => {
 
         returnFocus();
       });
-  };
-
-  const handleSetFilter = (value: FilterType) => {
-    setFiltering(value);
   };
 
   const handleClearCompleted = () => {
@@ -151,14 +147,14 @@ export const App: React.FC = () => {
   };
 
   useEffect(() => {
-    if (!todoServise.USER_ID) {
+    if (!todoService.USER_ID) {
       return;
     }
 
     setError(null);
     field.current?.focus();
 
-    todoServise
+    todoService
       .getTodos()
       .then(setTodos)
       .catch(() => setError(ErrorMessage.LoadTodos));
@@ -176,7 +172,7 @@ export const App: React.FC = () => {
     return () => clearTimeout(timer);
   }, [error]);
 
-  if (!todoServise.USER_ID) {
+  if (!todoService.USER_ID) {
     return <UserWarning />;
   }
 
@@ -205,7 +201,9 @@ export const App: React.FC = () => {
           <TodoFooter
             todos={todos}
             filterValue={filtering}
-            setFilter={handleSetFilter}
+            setFilter={(value: FilterType) => {
+              setFiltering(value);
+            }}
             onClear={handleClearCompleted}
           />
         )}
