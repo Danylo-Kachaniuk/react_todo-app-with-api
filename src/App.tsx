@@ -195,7 +195,7 @@ export const App: React.FC = () => {
           filterValue={filtering}
           onDelete={handleDeleteTodo}
           tempTodo={tempTodo}
-          todoChanger={handleUpdateTodo}
+          onChange={handleUpdateTodo}
         />
         {todos.length !== 0 && (
           <TodoFooter

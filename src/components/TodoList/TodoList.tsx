@@ -10,7 +10,7 @@ type Props = {
   onDelete: (id: number) => void;
   tempTodo: Todo | null;
   processingTodos: number[];
-  todoChanger: (todo: Todo) => Promise<void>;
+  onChange: (todo: Todo) => Promise<void>;
 };
 
 function filterTodo(todos: Todo[], filterBy: FilterType) {
@@ -30,7 +30,7 @@ export const TodoList: React.FC<Props> = ({
   onDelete,
   tempTodo,
   processingTodos,
-  todoChanger,
+  onChange,
 }) => {
   const visibleTodos = filterTodo(todos, filterValue);
 
@@ -43,7 +43,7 @@ export const TodoList: React.FC<Props> = ({
               todo={todo}
               isLoader={processingTodos.includes(todo.id)}
               onDelete={onDelete}
-              todoChanger={todoChanger}
+              onChange={onChange}
             />
           </CSSTransition>
         ))}

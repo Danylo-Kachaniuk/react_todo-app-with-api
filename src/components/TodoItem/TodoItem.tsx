@@ -1,29 +1,32 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Todo } from '../../types/Todo';
 import classNames from 'classnames';
 import { Loader } from '../Loader';
-
 type Props = {
   todo: Todo;
   isLoader: boolean;
   onDelete: (id: number) => void;
-  todoChanger?: (todo: Todo) => Promise<void>;
+  onChange?: (todo: Todo) => Promise<void>;
 };
-
 export const TodoItem: React.FC<Props> = ({
   todo,
   isLoader,
   onDelete,
-  todoChanger = () => {},
+  onChange = () => {},
 }) => {
   const { completed, title } = todo;
   const [isEditing, setIsEditing] = useState(false);
   const [editingTitle, setEditingTitle] = useState(title);
-
   const field = useRef<HTMLInputElement>(null);
 
+  useEffect(() => {
+    if (isEditing) {
+      field.current?.focus();
+    }
+  }, [isEditing]);
+
   const handleCompleteClick = () => {
-    todoChanger({
+    onChange({
       title: todo.title,
       id: todo.id,
       userId: todo.userId,
@@ -33,8 +36,6 @@ export const TodoItem: React.FC<Props> = ({
 
   const handleTitleDblClick = () => {
     setIsEditing(true);
-
-    setTimeout(() => field.current?.focus(), 0);
   };
 
   const handleSubmitTitle = async () => {
@@ -51,7 +52,7 @@ export const TodoItem: React.FC<Props> = ({
     }
 
     try {
-      await todoChanger({
+      await onChange({
         title: clearTitle,
         id: todo.id,
         userId: todo.userId,
